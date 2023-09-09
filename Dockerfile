@@ -11,7 +11,7 @@ FROM ubuntu:latest as download-speedtest
 RUN apt-get update && \
     apt-get install -y curl
 WORKDIR /tmp
-RUN curl -O "https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-aarch64.tgz"
+RUN curl -O "https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-$(arch).tgz"
 RUN tar xvf *.tgz
 
 # Build target image
