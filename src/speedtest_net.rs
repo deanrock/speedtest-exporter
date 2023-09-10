@@ -12,9 +12,9 @@ struct Root {
     type_field: String,
     timestamp: String,
     ping: SpeedtestNetPing,
-    download: SpeedtestNetDownload,
-    upload: SpeedtestNetUpload,
-    packet_loss: i64,
+    download: SpeedtestNetSpeedtest,
+    upload: SpeedtestNetSpeedtest,
+    packet_loss: Option<f64>, // field is sometimes missing
     isp: String,
     interface: SpeedtestNetInterface,
     server: SpeedtestNetServer,
@@ -32,10 +32,10 @@ struct SpeedtestNetPing {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-struct SpeedtestNetDownload {
-    bandwidth: i64,
-    bytes: i64,
-    elapsed: i64,
+struct SpeedtestNetSpeedtest {
+    bandwidth: f64,
+    bytes: f64,
+    elapsed: f64,
     latency: SpeedtestNetLatency,
 }
 
@@ -46,15 +46,6 @@ struct SpeedtestNetLatency {
     low: f64,
     high: f64,
     jitter: f64,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct SpeedtestNetUpload {
-    bandwidth: i64,
-    bytes: i64,
-    elapsed: i64,
-    latency: SpeedtestNetLatency,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -70,9 +61,9 @@ struct SpeedtestNetInterface {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct SpeedtestNetServer {
-    id: i64,
+    id: f64,
     host: String,
-    port: i64,
+    port: f64,
     name: String,
     location: String,
     country: String,
@@ -101,8 +92,8 @@ pub fn run_speedtest_net_speedtest() -> Result<SpeedTestResults, Error> {
     let data: Root = serde_json::from_slice(&output)?;
 
     Ok(SpeedTestResults {
-        download_bits: (data.download.bandwidth * 8) as f64,
-        upload_bits: (data.upload.bandwidth * 8) as f64,
+        download_bits: (data.download.bandwidth * 8.0) as f64,
+        upload_bits: (data.upload.bandwidth * 8.0) as f64,
         latency: data.ping.latency,
         jitter: Some(data.ping.jitter),
     })
