@@ -25,9 +25,12 @@ pub fn run_cloudflare_speedtest() -> Result<SpeedTestResults, Error> {
         ipv4: false,                       // don't force ipv4 usage
         ipv6: false,                       // don't force ipv6 usage
         verbose: false,
+        upload_only: false,
+        download_only: false,
         nr_tests: 5,
         nr_latency_tests: 20,
         max_payload_size: PayloadSize::M10,
+        disable_dynamic_max_payload_size: false,
     };
 
     let client = reqwest::blocking::Client::new();
@@ -41,6 +44,7 @@ pub fn run_cloudflare_speedtest() -> Result<SpeedTestResults, Error> {
         payload_sizes.clone(),
         options.nr_tests,
         options.output_format,
+        false,
     );
     let upload_test = run_tests(
         &client,
@@ -49,6 +53,7 @@ pub fn run_cloudflare_speedtest() -> Result<SpeedTestResults, Error> {
         payload_sizes.clone(),
         options.nr_tests,
         options.output_format,
+        false,
     );
 
     return Ok(SpeedTestResults {
