@@ -21,7 +21,7 @@ jobs:
         with:
           go-version: '1.26'
       - name: Build binary
-        run: make build
+        run: go build .
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
