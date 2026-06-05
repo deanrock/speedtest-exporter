@@ -1,2 +1,3 @@
-debug
-target
+/.github
+/Dockerfile
+/speedtest-exporter
