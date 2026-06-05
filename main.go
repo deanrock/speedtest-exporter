@@ -66,8 +66,8 @@ func main() {
 	reg.MustRegister(m.up, m.uploadBitsPerSecond, m.downloadBitsPerSecond, m.pingLatencyMilliseconds, m.jitterMilliseconds)
 
 	providers := map[string]provider{
-		//	"speedtest_net": NewSpeedtestNet(),
-		"cloudflare": NewCloudflare(),
+		"speedtest_net": NewSpeedtestNet(),
+		"cloudflare":    NewCloudflare(),
 	}
 
 	go func() {
