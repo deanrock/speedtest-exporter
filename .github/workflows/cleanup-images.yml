@@ -1,12 +1,14 @@
+name: Cleanup old test Docker images
 on:
   workflow_dispatch:
+  push:
   schedule:
     - cron: "0 0 * * 0"
 
 jobs:
   clean:
     runs-on: ubuntu-latest
-    name: Delete old test Docker images
+    name: Cleanup old test Docker images
     steps:
       - uses: snok/container-retention-policy@v3.1.0
         with:
