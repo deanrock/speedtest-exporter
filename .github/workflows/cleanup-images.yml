@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Cleanup old test Docker images
     permissions:
+      contents: read
       packages: write
     steps:
       - uses: snok/container-retention-policy@v3.1.0
