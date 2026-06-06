@@ -4,7 +4,7 @@ import "context"
 
 type result struct {
 	latency  float64
-	jitter   float64
+	jitter   *float64
 	download float64
 	upload   float64
 }

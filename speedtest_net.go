@@ -44,7 +44,7 @@ func (s *SpeedtestNet) RunTest(context.Context) (*result, error) {
 
 	return &result{
 		latency:  float64(target.Latency.Milliseconds()),
-		jitter:   float64(target.Latency.Milliseconds()),
+		jitter:   new(float64(target.Latency.Milliseconds())),
 		download: float64(target.DLSpeed) * 8,
 		upload:   float64(target.ULSpeed) * 8,
 	}, nil

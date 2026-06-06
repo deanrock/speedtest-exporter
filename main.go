@@ -85,7 +85,10 @@ func main() {
 					m.downloadBitsPerSecond.WithLabelValues(name).Set(result.download)
 					m.uploadBitsPerSecond.WithLabelValues(name).Set(result.upload)
 					m.pingLatencyMilliseconds.WithLabelValues(name).Set(result.latency)
-					m.jitterMilliseconds.WithLabelValues(name).Set(result.jitter)
+
+					if result.jitter != nil {
+						m.jitterMilliseconds.WithLabelValues(name).Set(*result.jitter)
+					}
 				}
 
 				cancel()

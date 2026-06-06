@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bruceharrison1984/cloudflare-speed-test/config"
 	"github.com/bruceharrison1984/cloudflare-speed-test/engines"
@@ -28,8 +29,8 @@ func NewCloudflare() *Cloudflare {
 	}
 }
 
-func (s *Cloudflare) RunTest(ctx context.Context) (*result, error) {
-	go s.engine.RunSpeedTest(ctx, config.GetDefaultConfig())
+func (s *Cloudflare) runTest(ctx context.Context, cases []types.SpeedTestCase) (*result, error) {
+	go s.engine.RunSpeedTest(ctx, cases)
 
 	dlSpeed := float64(0)
 	ulSpeed := float64(0)
@@ -42,7 +43,7 @@ func (s *Cloudflare) RunTest(ctx context.Context) (*result, error) {
 				if ok {
 					dlSpeed = summary.Bandwidth.DownloadSpeedMbps * 1000 * 1000
 					ulSpeed = summary.Bandwidth.UploadSpeedMbps * 1000 * 1000
-					ping = summary.Bandwidth.Ping
+					ping = summary.Bandwidth.Ping * 1000
 				}
 			}
 		case _, ok := <-s.exitChannel:
@@ -50,7 +51,7 @@ func (s *Cloudflare) RunTest(ctx context.Context) (*result, error) {
 				if !ok {
 					return &result{
 						latency:  ping,
-						jitter:   0,
+						jitter:   nil,
 						download: dlSpeed,
 						upload:   ulSpeed,
 					}, nil
@@ -64,4 +65,23 @@ func (s *Cloudflare) RunTest(ctx context.Context) (*result, error) {
 			}
 		}
 	}
+}
+
+func (s *Cloudflare) RunTest(ctx context.Context) (*result, error) {
+	speedTest, err := s.runTest(ctx, config.GetDefaultConfig())
+	if err != nil {
+		return nil, fmt.Errorf("failed to run speedtest: %w", err)
+	}
+
+	ping, err := s.runTest(ctx, []types.SpeedTestCase{{PayloadSize: 1e5, Iterations: 10, TestType: types.Download}})
+	if err != nil {
+		return nil, fmt.Errorf("failed to run speedtest: %w", err)
+	}
+
+	result := result{
+		upload:   speedTest.upload,
+		download: speedTest.download,
+		latency:  ping.latency,
+	}
+	return &result, nil
 }

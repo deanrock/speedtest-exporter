@@ -2,7 +2,7 @@ module github.com/deanrock/speedtest-exporter
 
 go 1.26.1
 
-replace github.com/bruceharrison1984/cloudflare-speed-test v0.0.0-20230807164728-f97537fef9b5 => github.com/deanrock/cloudflare-speed-test v0.0.0-20260605205647-d99fa3994204
+replace github.com/bruceharrison1984/cloudflare-speed-test v0.0.0-20230807164728-f97537fef9b5 => github.com/deanrock/cloudflare-speed-test v0.0.0-20260606053025-d841732b13bb
 
 require (
 	github.com/bruceharrison1984/cloudflare-speed-test v0.0.0-20230807164728-f97537fef9b5
