@@ -1,0 +1,23 @@
+name: Cleanup old test Docker images
+on:
+  workflow_dispatch:
+  push:
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    name: Cleanup old test Docker images
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: snok/container-retention-policy@v3.1.0
+        with:
+          account: deanrock
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: "speedtest-exporter"
+          image-tags: "sha-*"
+          cut-off: 1w
+          dry-run: true
